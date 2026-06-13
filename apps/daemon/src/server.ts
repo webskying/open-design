@@ -446,6 +446,7 @@ import {
   upsertMessage,
   upsertPreviewComment,
 } from './db.js';
+import { initFoxpreDatabase } from './foxpre/db.js';
 import {
   computeIncludeStable,
   hashStableInstructions,
@@ -4965,6 +4966,7 @@ export async function startServer({
     next();
   });
   const db = openDatabase(PROJECT_ROOT, { dataDir: RUNTIME_DATA_DIR });
+  initFoxpreDatabase(db);
   // Wire the upload-destination bridge to this db so multer can route
   // file uploads into baseDir-rooted projects' actual folders.
   projectMetadataLookup = (id) => {
