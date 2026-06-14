@@ -3191,7 +3191,7 @@ export interface Dict {
   'foxpre.startWorkflow': string;
   'foxpre.triggerHarness': string;
   'foxpre.projectSettings': string;
-  'foxpro.bidderManagement': string;
+  'foxpre.bidderManagement': string;
   'foxpre.styleTemplate': string;
   'foxpre.todo': string;
   'foxpre.inProgress': string;

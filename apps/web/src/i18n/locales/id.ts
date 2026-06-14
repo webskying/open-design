@@ -3059,7 +3059,7 @@ export const id: Dict = {
   'foxpre.startWorkflow': 'Start Workflow',
   'foxpre.triggerHarness': 'Run Harness',
   'foxpre.projectSettings': 'Project Settings',
-  'foxpro.bidderManagement': 'Bidder Management',
+  'foxpre.bidderManagement': 'Bidder Management',
   'foxpre.styleTemplate': 'Style Templates',
   'foxpre.todo': 'To Do',
   'foxpre.inProgress': 'In Progress',

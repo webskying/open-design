@@ -3060,7 +3060,7 @@ export const zhCN: Dict = {
   'foxpre.startWorkflow': '启动工作流',
   'foxpre.triggerHarness': '触发门禁',
   'foxpre.projectSettings': '项目设置',
-  'foxpro.bidderManagement': '投标人管理',
+  'foxpre.bidderManagement': '投标人管理',
   'foxpre.styleTemplate': '样式模板',
   'foxpre.todo': '待启动',
   'foxpre.inProgress': '进行中',
