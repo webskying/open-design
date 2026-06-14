@@ -1,7 +1,8 @@
 # foxpre 主开发计划
 
 **日期**：2026-06-13
-**状态**：待执行
+**更新**：2026-06-14（阶段五审查通过后刷新）
+**状态**：执行中（阶段零-五已完成，阶段六-九待开发）
 **前置文档**：`../architecture-analysis.md`、`../foxpre-requirements-spec.md`、`../foxpre__implementation-plan.md`、`../implementation-roadmap.md`
 
 ---
@@ -13,7 +14,7 @@
 | Node | `~24` (engines.node) | ✅ v24.16.0 |
 | pnpm | `10.33.2` | ✅ 10.33.2 |
 | `pnpm typecheck` | 零错误 | ✅ 全绿 |
-| `pnpm guard` | 零错误 | ✅ 56/56 pass |
+| `pnpm guard` | 零错误 | ✅ 54/54 pass |
 | Pandoc | 系统依赖 | ⬜ 待安装 |
 | VS Build Tools 2022+ | better-sqlite3 编译 | ⬜ 待安装 |
 
@@ -22,16 +23,16 @@
 ## 1. 九阶段实施计划
 
 ```
-阶段零：Contract 类型验证     🟢 低风险  ← 当前阶段
-阶段一：数据库层 (11张表)     🟢 低风险
-阶段四：Agent Skills (9个)    🟢 低风险
-阶段二：文档处理管线          🟡 中风险
-阶段三：门禁审核引擎          🟢 低风险
-阶段六：Daemon API 路由       🟡 中风险
-阶段七：Web UI               🔴 高风险
-阶段五：SOLO Coder 调度引擎   🔴 高风险
-阶段八：DOCX 组装输出         🟢 低风险
-阶段九：集成测试 + i18n       🟡 中风险
+✅ 阶段零：Contract 类型验证     🟢 低风险  commit f29d293
+✅ 阶段一：数据库层 (11张表)     🟢 低风险  commit f29d293
+✅ 阶段二：文档处理管线          🟡 中风险  commit f29d293
+✅ 阶段三：门禁审核引擎          🟢 低风险  commit f29d293
+✅ 阶段四：Agent Skills (9个)    🟢 低风险  commit 218571a
+✅ 阶段五：SOLO Coder 调度引擎   🔴 高风险  commit d221511
+⬜ 阶段六：Daemon API 路由       🟡 中风险  ← 下一阶段
+⬜ 阶段七：Web UI               🔴 高风险
+⬜ 阶段八：DOCX 组装输出         🟢 低风险
+⬜ 阶段九：集成测试 + i18n       🟡 中风险
 ```
 
 ---
@@ -249,19 +250,19 @@ foxpre 代码分为两层：
 
 | 层 | 文件数 | 策略 | 与 OD 关系 |
 |-----|-------|------|-----------|
-| **OD 修改面**（6 个文件） | 6 | 最小修改，源码仓库内或 patch-package 补丁 | 编译时交叉，升级时需关注 |
-| **foxpre 自有代码**（~51 个文件） | ~51 | 全新文件，位于 foxpre 命名空间下 | 零冲突，OD 不会触碰 |
+| **OD 修改面**（5 个文件，1 个待定） | 5+1 | 最小修改，源码仓库内或 patch-package 补丁 | 编译时交叉，升级时需关注 |
+| **foxpre 自有代码**（~55 个文件） | ~55 | 全新文件，位于 foxpre 命名空间下 | 零冲突，OD 不会触碰 |
 
 ### 3.2 必须修改的 OD 文件（6 个）
 
 | # | 文件 | 修改量 | 风险 | 类型检测 |
 |---|------|--------|------|---------|
-| 1 | `packages/contracts/src/api/projects.ts` | +1 行 | 🟢 | ✅ 自动（联合类型穷举） |
-| 2 | `packages/contracts/src/plugins/scenario-defaults.ts` | +1 行 | 🟢 | ✅ 自动（Record<ProjectKind> 穷举） |
-| 3 | `packages/contracts/tests/scenario-defaults.test.ts` | +1 行 | 🟢 | ⚠️ 手动 |
-| 4 | `apps/web/src/components/NewProjectPanel.tsx` | +15~20 行 | 🟡 | ✅ 自动（switch/case 穷举） |
-| 5 | `apps/web/src/components/ProjectView.tsx` | +10~15 行 | 🟢 | — |
-| 6 | `apps/daemon/src/server.ts` | +8 行 | 🟢 | — |
+| 1 | `packages/contracts/src/api/projects.ts` | +1 行 | 🟢 | ✅ 已完成 |
+| 2 | `packages/contracts/src/plugins/scenario-defaults.ts` | +1 行 | 🟢 | ✅ 已完成 |
+| 3 | `packages/contracts/tests/scenario-defaults.test.ts` | +1 行 | 🟢 | ⬜ 待执行 |
+| 4 | `apps/web/src/components/NewProjectPanel.tsx` | +15~20 行 | 🟡 | ⬜ 阶段七 |
+| 5 | `apps/web/src/components/ProjectView.tsx` | +10~15 行 | 🟢 | ⬜ 阶段七 |
+| 6 | `apps/daemon/src/server.ts` | +8 行 | 🟢 | ⬜ 阶段六 |
 
 **数据架构的修改面结论**：上述 6 个文件中，**没有一个涉及 OD 的 memory/connectors 系统**。foxpre 的知识库策略是纯粹的新增代码。
 
@@ -618,17 +619,17 @@ pnpm --filter @open-design/daemon test tests/foxpre/image-describer.test.ts
 
 ### 8.2 智能体列表
 
-| 标识 | 文件 | 核心职责 | 执行顺序 |
+| 标识 | 文件 | 核心职责 | DAG 位置 |
 |------|------|---------|---------|
-| foxpre-analyzer | `skills/foxpre-analyzer/SKILL.md` | 招标文件解析 | 1 |
-| foxpre-researcher | `skills/foxpre-researcher/SKILL.md` | 资料搜集 | 2（并行） |
-| foxpre-prototyper | `skills/foxpre-prototyper/SKILL.md` | 原型/图表生成 | 2（并行） |
-| foxpre-architect | `skills/foxpre-architect/SKILL.md` | 大纲设计 | 3 |
-| foxpre-tech-writer | `skills/foxpre-tech-writer/SKILL.md` | 技术方案撰写 | 4（并行） |
-| foxpre-business-writer | `skills/foxpre-business-writer/SKILL.md` | 商务标书 | 4（并行） |
-| foxpre-pm-writer | `skills/foxpre-pm-writer/SKILL.md` | 项目管理方案 | 4（并行） |
-| foxpre-reviewer | `skills/foxpre-reviewer/SKILL.md` | 质量审核 | 5 |
-| foxpre-solo-coder | `skills/foxpre-solo-coder/SKILL.md` | 主控调度 | 编排层 |
+| foxpre-analyzer | `skills/foxpre-analyzer/SKILL.md` | 招标文件解析 | Step 1 |
+| foxpre-tech-writer | `skills/foxpre-tech-writer/SKILL.md` | 技术方案撰写 | Step 2（并行） |
+| foxpre-biz-writer | `skills/foxpre-biz-writer/SKILL.md` | 商务方案撰写 | Step 2（并行） |
+| foxpre-qual-writer | `skills/foxpre-qual-writer/SKILL.md` | 资质文件编写 | Step 2（并行） |
+| foxpre-harness-runner | `skills/foxpre-harness-runner/SKILL.md` | 门禁审核执行 | Step 3（Gate） |
+| foxpre-style-checker | `skills/foxpre-style-checker/SKILL.md` | 样式合规检查 | Step 4 |
+| foxpre-docx-assembler | `skills/foxpre-docx-assembler/SKILL.md` | DOCX 组装输出 | Step 5（终步） |
+| foxpre-orchestrator | `skills/foxpre-orchestrator/SKILL.md` | 编排调度 | 驱动层 |
+| foxpre-bidder-manager | `skills/foxpre-bidder-manager/SKILL.md` | 投标人管理 | 支撑服务 |
 
 ---
 
@@ -643,20 +644,23 @@ pnpm --filter @open-design/daemon test tests/foxpre/image-describer.test.ts
 | 文件 | 说明 |
 |------|------|
 | `apps/daemon/src/foxpre/solo-coder.ts` | 状态机 + 6 个核心函数 |
+| `apps/daemon/tests/foxpre/solo-coder.test.ts` | 12 个测试用例 |
+| `packages/contracts/src/foxpre/constants.ts` | **修改**：AGENT_CODES 对齐实际 9 Agent |
 
 ### 9.3 核心函数
 
-- `启动投标工作流()` — 总入口
-- `派遣智能体()` — 通过 `/api/runs` 创建 Agent 实例
-- `监控智能体进度()` — 通过 Git commit 检测进度
-- `处理用户介入()` — 暂停/恢复/重定向
-- `触发审核()` — 调用门禁引擎
-- `组装最终Docx()` — 合并输出
+- `createWorkflow(db, projectId)` — 按 DAG 创建 7 条任务（原子事务、幂等）
+- `advanceWorkflow(db, projectId)` — 检查依赖，推进满足条件的任务
+- `completeTask(db, projectId, taskId, outputPath?)` — 标记任务完成
+- `failTask(db, projectId, taskId, errorLog)` — 标记失败 + 项目状态流转
+- `triggerHarness(db, projectId)` — 收集片段 → 调用 `runFullHarness` → 流转状态
+- `getWorkflowState(db, projectId)` — 返回完整工作流状态（供看板消费）
 
-### 9.4 前置依赖
+### 9.4 设计决策
 
-- 阶段六（API 路由）必须就绪（solo-coder 依赖 HTTP API）
-- 阶段四（Skills）必须就绪（派遣目标存在）
+- 本阶段实现纯状态机逻辑，不依赖 HTTP API。进程派遣（`dispatchAgent`）由阶段六完成。
+- DAG 硬编码（非通用工作流引擎），依赖图固定 5 步 9 Agent。
+- 状态值与 `BID_PROJECT_STATUS` 常量对齐。
 
 ---
 
@@ -910,10 +914,12 @@ pnpm typecheck      # 类型检查
 
 ## 18. 子计划索引
 
-| 计划文档 | 内容 |
-|---------|------|
-| `0613_phase-zero-contract.md` | 阶段零详细执行步骤 |
-| *(后续计划在此追加)* |
+| 计划文档 | 内容 | 状态 |
+|---------|------|------|
+| `0613_phase-zero-contract.md` | 阶段零详细执行步骤 | ✅ 已完成 |
+| `0614_phase-four-agent-skills.md` | 阶段四开发提示词 | ✅ 已完成 |
+| `0614_phase-five-solo-coder.md` | 阶段五开发提示词 | ✅ 已完成 |
+| `0614_phase-six-api-routes.md` | 阶段六开发提示词 | ⬜ 待编写 |
 
 ---
 
