@@ -1,7 +1,7 @@
 # foxpre 项目上下文移交
 
-**移交日期**：2026-06-14（更新）
-**移交原因**：阶段六审查通过并合入，更新状态
+**移交日期**：2026-06-14（阶段七开发中更新）
+**移交原因**：atomcode 已开始阶段七 Web UI 开发，会话窗口切换需传递完整上下文
 
 ---
 
@@ -43,7 +43,8 @@ foxpre（投标标书制作）是基于 Open Design 的**信息化类 IT 项目�
 | Phase 0 合同 | `docs/foxpre/plan/0613_phase-zero-contract.md` | 阶段零设计规格 |
 | Phase 4 提示词 | `docs/foxpre/plan/0614_phase-four-agent-skills.md` | 阶段四（SKILL.md） |
 | Phase 5 提示词 | `docs/foxpre/plan/0614_phase-five-solo-coder.md` | 阶段五（solo-coder） |
-| Phase 6 提示词 | `docs/foxpre/plan/0614_phase-six-api-routes.md` | 阶段六（API + CLI） ← 下一步 |
+| Phase 6 提示词 | `docs/foxpre/plan/0614_phase-six-api-routes.md` | 阶段六（API + CLI） ✅ |
+| Phase 7 提示词 | `docs/foxpre/plan/0614_phase-seven-web-ui.md` | 阶段七（Web UI） ← 下一步 |
 
 ---
 
@@ -60,13 +61,25 @@ foxpre（投标标书制作）是基于 Open Design 的**信息化类 IT 项目�
 | ✅ 阶段四 | Agent Skills (9个) | 完成 | `skills/foxpre-*/SKILL.md` (9 文件) |
 | ✅ 阶段五 | SOLO Coder 调度引擎 | 完成 | `apps/daemon/src/foxpre/solo-coder.ts` + 测试 |
 | ✅ 阶段六 | Daemon API 路由 + CLI | 完成 | 5 路由文件 + field-crypto + server.ts + cli.ts |
-| **⬜ 阶段七** | **Web UI** | **待开发** | 18 个组件 + 4 个页面 |
+| 阶段七 | Web UI | 🟡 进行中（atomcode phase-seven 分支） | types.ts 已追加 i18n key，组件待开发 |
 | ⬜ 阶段八 | DOCX 组装输出 | 待开发 | |
 | ⬜ 阶段九 | 集成测试 + i18n | 待开发 | |
 
 ### 3.2 下一阶段：阶段七（Web UI）
 
 **提示词文档**：`docs/foxpre/plan/0614_phase-seven-web-ui.md`（700 行，✅ 已就绪）
+
+**当前进度**（atomcode 在 `foxpre/v0.10/phase-seven` 分支）：
+| 文件 | 状态 |
+|------|------|
+| `apps/web/src/i18n/types.ts` | ✅ 已追加 38 行 foxpre.* Dict key |
+| `apps/web/src/i18n/locales/*.ts` (18 个文件) | ✅ 已完成 38 个 key × 18 locale 翻译 |
+| `apps/web/src/components/NewProjectPanel.tsx` | ⬜ 待修改 |
+| `apps/web/src/components/ProjectView.tsx` | ⬜ 待修改 |
+| `apps/web/src/components/foxpre/` (12 个组件) | ⬜ 待创建 |
+
+**注意**：`foxpre.bidderManagement` key 有 typo（写作 `foxpro`，少 e），需修正。
+
 
 **产出**：
 | 操作 | 文件 | 说明 |
@@ -85,7 +98,7 @@ foxpre（投标标书制作）是基于 Open Design 的**信息化类 IT 项目�
 | 修改 | `apps/web/src/components/ProjectView.tsx` | kind='bid' 时显示"标书" Tab + BidWarRoom |
 | 修改 | `apps/web/src/i18n/types.ts` + `locales/*.ts` (19 个文件) | Dict 追加 ~40 foxpre.* 键 |
 
-**分支**：atomcode 需从 `foxpre/v0.10/dev` 切出 `foxpre/v0.10/phase-seven` 进行开发。
+**分支**：atomcode 正在 `foxpre/v0.10/phase-seven` 开发。
 
 ---
 
@@ -101,18 +114,20 @@ upstream  https://github.com/nexu-io/open-design.git    (官方仓库)
 ### 4.2 分支结构
 
 ```
-foxpre/v0.10/dev  ← 当前开发分支
-  ├── 29bfd8dd4 foxpre: add phase-seven Web UI development plan ← 当前 HEAD
+foxpre/v0.10/dev  ← 整合分支（所有阶段合入）
+  ├── fc6431ff2 foxpre: update handoff after phase-seven plan ← 当前 HEAD
+  ├── 29bfd8dd4 foxpre: add phase-seven Web UI development plan
   ├── 3d1814010 foxpre: refresh master plan and handoff after phase-six merge
   ├── a8f6a2914 foxpre: merge phase-six API routes + CLI
-  ├── 4b2e7a0  foxpre: add phase-six API routes development plan
-  ├── dceed21  foxpre: refresh master plan
-  ├── d221511  foxpre: add SOLO Coder scheduling engine
-  ├── 80500d29 foxpre: add context docs, phase-four plan, gitignore
-  ├── 218571a  foxpre: upgrade agent skill definitions
-  ├── da5d893  foxpre: wire foxpre into OD contracts and daemon startup
-  ├── f29d293  foxpre: add all foxpre-owned files
+  ├── 09dd31192 foxpre: add daemon API routes + CLI commands
+  ├── ... (阶段五至阶段零)
   └── 3c3d45a  v0.10.0 tag ← 与 upstream 共享的 git 祖先 ✅
+
+foxpre/v0.10/phase-seven  ← atomcode 当前开发分支（阶段七 Web UI）
+  ├── types.ts 已修改（foxpre.* i18n key 追加，待 locales 翻译）
+  └── 组件文件（待开发）
+
+foxpre/v0.10/phase-six  ← 阶段六已完成（已合入 dev）
 ```
 
 ### 4.3 关键信息
@@ -158,8 +173,9 @@ git log --oneline -8 --decorate
 | 4 | `apps/daemon/src/server.ts` | +10 行（initFoxpreDatabase + registerFoxpreRoutes） | ✅ 已完成（阶段六） |
 | 5 | `apps/daemon/src/cli.ts` | +243 行（3 命令函数 + SUBCOMMAND_MAP） | ✅ 已完成（阶段六） |
 | 6 | `apps/web/src/components/PluginLoopHome.tsx` | +1/-1 行（projectKind union 追加 'bid'） | ✅ 已完成（阶段六附带修复） |
-| 7 | `apps/web/src/components/NewProjectPanel.tsx` | ⬜ 阶段七 | 待开发 |
-| 8 | `apps/web/src/components/ProjectView.tsx` | ⬜ 阶段七 | 待开发 |
+| 7 | `apps/web/src/components/NewProjectPanel.tsx` | 🟡 阶段七进行中 | 待开发 |
+| 8 | `apps/web/src/components/ProjectView.tsx` | 🟡 阶段七进行中 | 待开发 |
+| 9 | `apps/web/src/i18n/types.ts` | +38 行（foxpre.* Dict key） | 🟡 阶段七进行中（已追加，待 locales 翻译） |
 
 ### 5.2 foxpre 自有文件（零冲突）
 
@@ -313,8 +329,10 @@ git diff --stat foxpre/v0.10/dev
 # 推送
 git push origin foxpre/v0.10/dev
 
-# atomcode 阶段六开发分支
-git checkout -b foxpre/v0.10/phase-six foxpre/v0.10/dev
+# atomcode 阶段七开发分支（已存在）
+git checkout foxpre/v0.10/phase-seven
+# 新阶段切分支
+git checkout -b foxpre/v0.10/phase-eight foxpre/v0.10/dev
 ```
 
 ---
@@ -323,10 +341,11 @@ git checkout -b foxpre/v0.10/phase-six foxpre/v0.10/dev
 
 | # | 事项 | 状态 |
 |---|------|------|
-| 1 | atomcode 阶段七开发（Web UI） | ⬜ 提示词已就绪，等待 atomcode |
-| 3 | `scenario-defaults.test.ts` 补 `bid` 用例 | ⬜ 阶段零遗留 |
-| 4 | `HomeView.tsx:1541` 类型错误修复 | ⬜ 阶段七范围 |
-| 5 | `PluginLoopHome.tsx` 已追加 'bid'（阶段六附带） | ✅ 已完成 |
+| 1 | atomcode 阶段七开发（Web UI） | 🟡 进行中（types.ts 已修改，组件待开发） |
+| 2 | `scenario-defaults.test.ts` 补 `bid` 用例 | ⬜ 阶段零遗留 |
+| 3 | `HomeView.tsx:1541` 类型错误修复 | ⬜ 阶段七范围 |
+| 4 | `PluginLoopHome.tsx` 已追加 'bid'（阶段六附带） | ✅ 已完成 |
+| 5 | 阶段七完成后主计划刷新 | ⬜ 待审查通过后 |
 
 ---
 
