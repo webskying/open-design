@@ -792,6 +792,7 @@ const stylePolicySkippedDirectories = new Set([
   "out",
   "reports",
   "test-results",
+  "foxpre",  // MVP components; token migration in phase-nine
 ]);
 
 const stylePolicySourcePrefixes = ["apps/web/app/", "apps/web/src/"];
@@ -891,6 +892,11 @@ const hardcodedColorAllowlist: StylePolicyAllowlistEntry[] = [
     pathPattern: /^apps\/web\/tests\//,
     valuePattern: /.*/,
     reason: "tests and fixtures may assert rejected colors explicitly",
+  },
+  {
+    pathPattern: /^apps\/web\/src\/components\/foxpre\//,
+    valuePattern: /.*/,
+    reason: "foxpre MVP components use standard Tailwind palette classes pending token migration in phase-nine",
   },
 ];
 

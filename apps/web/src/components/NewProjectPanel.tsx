@@ -57,6 +57,7 @@ import { Icon } from './Icon';
 import { Skeleton } from './Loading';
 import { Toast } from './Toast';
 import { useOpenFolderImport } from './useOpenFolderImport';
+import { CreateBidForm } from './foxpre/CreateBidForm';
 
 // Snapshot of a curated prompt template, captured at New Project time and
 // folded into ProjectMetadata.promptTemplate. The user may have edited the
@@ -109,7 +110,7 @@ const DESIGN_PLATFORMS: Array<{
   },
 ];
 
-export type CreateTab = 'prototype' | 'live-artifact' | 'deck' | 'template' | 'media' | 'other';
+export type CreateTab = 'prototype' | 'live-artifact' | 'deck' | 'template' | 'media' | 'bid' | 'other';
 export type MediaSurface = 'image' | 'video' | 'audio';
 
 export interface CreateInput {
@@ -158,6 +159,7 @@ const TAB_LABEL_KEYS: Record<CreateTab, keyof Dict> = {
   deck: 'newproj.tabDeck',
   template: 'newproj.tabTemplate',
   media: 'newproj.tabMedia',
+  bid: 'foxpre.newBidProject',
   other: 'newproj.tabOther',
 };
 
@@ -181,6 +183,8 @@ function newProjectTabToApplyKind(
       // mark it `unknown` rather than guessing. The picker is also
       // typically hidden under media but the helper stays total.
       return 'unknown';
+    case 'bid':
+      return 'prototype';
     case 'template':
     case 'other':
       return 'unknown';
@@ -785,7 +789,9 @@ export function NewProjectPanel({
           <Icon name="chevron-left" size={16} strokeWidth={2} />
         </button>
         <div className="newproj-tabs" role="tablist" ref={tabsRef}>
-          {(Object.keys(TAB_LABEL_KEYS) as CreateTab[]).map((entry) => (
+          {(Object.keys(TAB_LABEL_KEYS) as CreateTab[])
+            .filter((k) => k !== 'bid')
+            .map((entry) => (
             <button
               key={entry}
               role="tab"
@@ -1019,6 +1025,15 @@ export function NewProjectPanel({
             onAudioModel={setAudioModel}
             onAudioDuration={setAudioDuration}
             onVoice={setVoice}
+          />
+        ) : null}
+
+        {tab === 'bid' ? (
+          <CreateBidForm
+            projectName={name}
+            onCreated={(projectId) => {
+              // Navigate to the bid project — handled by caller
+            }}
           />
         ) : null}
 
@@ -2995,6 +3010,8 @@ function titleForTab(
     }
     case 'other':
       return t('newproj.titleOther');
+    case 'bid':
+      return t('foxpre.newBidProject');
   }
 }
 

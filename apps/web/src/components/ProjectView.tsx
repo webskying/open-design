@@ -185,6 +185,7 @@ import {
 import { buildRepoImportPrompt, designSystemNeedsRepoConnect } from './design-system-github-evidence';
 import { collectReferencedJsxNames } from '../runtime/jsx-module-refs';
 import { FileWorkspace } from './FileWorkspace';
+import { BidWarRoom } from './foxpre/BidWarRoom';
 import {
   type PluginFolderAgentAction,
 } from './design-files/pluginFolderActions';
@@ -5757,6 +5758,9 @@ export function ProjectView({
             />
           )
         ) : null}
+        {project.metadata?.kind === 'bid' && openTabsState.active === 'foxpre-bid' && (
+          <BidWarRoom projectId={project.id} metadata={project.metadata as any} />
+        )}
         <FileWorkspace
           projectId={project.id}
           projectKind={projectKindToTracking(project.metadata?.kind, project.metadata?.videoModel) ?? 'prototype'}
