@@ -133,7 +133,7 @@ foxpre/v0.10/phase-six  ← 阶段六已完成（已合入 dev）
 ### 4.3 关键信息
 
 - GitHub 用户：`webskying`
-- Classic token：`REDACTED_TOKEN`（repo + workflow 权限）
+- Classic token：通过 `GH_TOKEN` 环境变量注入（repo + workflow 权限，不在版本控制中明文存储）
 - Fork：`https://github.com/webskying/open-design`（public fork，不可改 private）
 
 ### 4.4 日常操作
