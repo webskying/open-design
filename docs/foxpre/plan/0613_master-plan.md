@@ -919,7 +919,7 @@ pnpm typecheck      # 类型检查
 | `0613_phase-zero-contract.md` | 阶段零详细执行步骤 | ✅ 已完成 |
 | `0614_phase-four-agent-skills.md` | 阶段四开发提示词 | ✅ 已完成 |
 | `0614_phase-five-solo-coder.md` | 阶段五开发提示词 | ✅ 已完成 |
-| `0614_phase-six-api-routes.md` | 阶段六开发提示词 | ⬜ 待编写 |
+| `0614_phase-six-api-routes.md` | 阶段六开发提示词 | ✅ 已编写，⬜ 待执行 |
 
 ---
 
