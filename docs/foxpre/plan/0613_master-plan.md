@@ -1,8 +1,8 @@
 # foxpre 主开发计划
 
 **日期**：2026-06-13
-**更新**：2026-06-14（阶段五审查通过后刷新）
-**状态**：执行中（阶段零-五已完成，阶段六-九待开发）
+**更新**：2026-06-14（阶段六审查通过后刷新）
+**状态**：执行中（阶段零-六已完成，阶段七-九待开发）
 **前置文档**：`../architecture-analysis.md`、`../foxpre-requirements-spec.md`、`../foxpre__implementation-plan.md`、`../implementation-roadmap.md`
 
 ---
@@ -29,8 +29,8 @@
 ✅ 阶段三：门禁审核引擎          🟢 低风险  commit f29d293
 ✅ 阶段四：Agent Skills (9个)    🟢 低风险  commit 218571a
 ✅ 阶段五：SOLO Coder 调度引擎   🔴 高风险  commit d221511
-⬜ 阶段六：Daemon API 路由       🟡 中风险  ← 下一阶段
-⬜ 阶段七：Web UI               🔴 高风险
+✅ 阶段六：Daemon API 路由       🟡 中风险  commit 09dd311（含 CLI） ← 已完成
+⬜ 阶段七：Web UI               🔴 高风险  ← 下一阶段
 ⬜ 阶段八：DOCX 组装输出         🟢 低风险
 ⬜ 阶段九：集成测试 + i18n       🟡 中风险
 ```
@@ -857,9 +857,9 @@ CLI 子命令与对应 API 路由同期交付，不跨阶段拆分。即：
 
 | 阶段 | API 路由 | CLI 子命令 | 交付物 |
 |------|---------|-----------|--------|
-| 阶段六 | `bid-routes.ts` | `od bid {create,list,status,start,pause,review,output}` | `commands/bid.ts` |
-| 阶段六 | `bidder-routes.ts` | `od bidder {add,list}` | `commands/bidder.ts` |
-| 阶段六 | `style-routes.ts` | `od style {list,create}` | `commands/style.ts` |
+| 阶段六 ✅ | `bid-routes.ts` | `od bid {create,list,status,start,harness,review}` | `cli.ts` 内联 `runBid` |
+| 阶段六 ✅ | `bidder-routes.ts` | `od bidder {add,list,get,delete}` | `cli.ts` 内联 `runBidder` |
+| 阶段六 ✅ | `style-routes.ts` | `od style {create,list,get,delete}` | `cli.ts` 内联 `runStyle` |
 
 **原则**：不允许 "CLI 稍后补"——CLI 与 API 路由在同一阶段交付，与 UI 同为完成标准。
 
@@ -919,7 +919,8 @@ pnpm typecheck      # 类型检查
 | `0613_phase-zero-contract.md` | 阶段零详细执行步骤 | ✅ 已完成 |
 | `0614_phase-four-agent-skills.md` | 阶段四开发提示词 | ✅ 已完成 |
 | `0614_phase-five-solo-coder.md` | 阶段五开发提示词 | ✅ 已完成 |
-| `0614_phase-six-api-routes.md` | 阶段六开发提示词 | ✅ 已编写，⬜ 待执行 |
+| `0614_phase-six-api-routes.md` | 阶段六开发提示词 | ✅ 已完成（5 新增 + 3 修改，18 端点） |
+| `0614_phase-six-merge-report.md` | 阶段六审查报告 | ✅ 已完成 |
 
 ---
 

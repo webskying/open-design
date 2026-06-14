@@ -1,7 +1,7 @@
 # foxpre 项目上下文移交
 
 **移交日期**：2026-06-14（更新）
-**移交原因**：新会话启动，需要完整项目上下文
+**移交原因**：阶段六审查通过并合入，更新状态
 
 ---
 
@@ -59,27 +59,24 @@ foxpre（投标标书制作）是基于 Open Design 的**信息化类 IT 项目�
 | ✅ 阶段三 | 门禁审核引擎 | 完成 | `apps/daemon/src/foxpre/harness-engine.ts` |
 | ✅ 阶段四 | Agent Skills (9个) | 完成 | `skills/foxpre-*/SKILL.md` (9 文件) |
 | ✅ 阶段五 | SOLO Coder 调度引擎 | 完成 | `apps/daemon/src/foxpre/solo-coder.ts` + 测试 |
-| **⬜ 阶段六** | **Daemon API 路由 + CLI** | **待开发** | 5 路由文件 + field-crypto + server.ts 修改 |
-| ⬜ 阶段七 | Web UI | 待开发 | 18 个组件 + 4 个页面 |
+| ✅ 阶段六 | Daemon API 路由 + CLI | 完成 | 5 路由文件 + field-crypto + server.ts + cli.ts |
+| **⬜ 阶段七** | **Web UI** | **待开发** | 18 个组件 + 4 个页面 |
 | ⬜ 阶段八 | DOCX 组装输出 | 待开发 | |
 | ⬜ 阶段九 | 集成测试 + i18n | 待开发 | |
 
-### 3.2 下一阶段：阶段六（API 路由 + CLI）
+### 3.2 下一阶段：阶段七（Web UI）
 
-**提示词文档**：`docs/foxpre/plan/0614_phase-six-api-routes.md`（637 行）
+**提示词文档**：`docs/foxpre/plan/0614_phase-seven-web-ui.md`（待编写）
 
 **产出**：
 | 操作 | 文件 | 说明 |
 |------|------|------|
-| 新增 | `apps/daemon/src/foxpre/field-crypto.ts` | AES-256-GCM 加密/解密 |
-| 新增 | `apps/daemon/src/foxpre/bid-routes.ts` | 投标项目 CRUD + Kanban SSE |
-| 新增 | `apps/daemon/src/foxpre/bidder-routes.ts` | 投标人 CRUD（加密存储） |
-| 新增 | `apps/daemon/src/foxpre/style-routes.ts` | 样式模板 CRUD |
-| 新增 | `apps/daemon/src/foxpre/foxpre-routes.ts` | 聚合注册入口 |
-| 修改 | `apps/daemon/src/server.ts` | +1 import + 1 注册调用 |
-| 修改 | `apps/daemon/src/cli.ts` | +4 命令函数（bid/bidder/style） |
+| 新增 | `apps/web/src/components/foxpre/` | 18 个 UI 组件 |
+| 新增 | `apps/web/src/app/foxpre/` | 4 个页面路由 |
+| 修改 | `apps/web/src/components/NewProjectPanel.tsx` | +15~20 行（projectKind 追加 'bid'） |
+| 修改 | `apps/web/src/components/ProjectView.tsx` | +10~15 行（bid 项目视图） |
 
-**分支**：atomcode 需从 `foxpre/v0.10/dev` 切出 `foxpre/v0.10/phase-six` 进行开发。
+**分支**：atomcode 需从 `foxpre/v0.10/dev` 切出 `foxpre/v0.10/phase-seven` 进行开发。
 
 ---
 
@@ -96,6 +93,8 @@ upstream  https://github.com/nexu-io/open-design.git    (官方仓库)
 
 ```
 foxpre/v0.10/dev  ← 当前开发分支
+  ├── a8f6a2914 foxpre: merge phase-six API routes + CLI ← 当前 HEAD
+  ├── 09dd31192 foxpre: add daemon API routes + CLI commands
   ├── 4b2e7a0  foxpre: add phase-six API routes development plan
   ├── dceed21  foxpre: refresh master plan
   ├── d221511  foxpre: add SOLO Coder scheduling engine
@@ -146,22 +145,23 @@ git log --oneline -8 --decorate
 | 1 | `packages/contracts/src/index.ts` | +1 行 | ✅ 已完成 |
 | 2 | `packages/contracts/src/api/projects.ts` | +1 行（`ProjectKind` 追加 `'bid'`） | ✅ 已完成 |
 | 3 | `packages/contracts/src/plugins/scenario-defaults.ts` | +1 行（`Record<ProjectKind>` 补 `bid`） | ✅ 已完成（阶段五） |
-| 4 | `apps/daemon/src/server.ts` | +2 行（`initFoxpreDatabase` import + 调用） | ✅ 已完成；阶段六追加路由注册 |
-| 5 | `apps/daemon/src/cli.ts` | ⬜ 阶段六追加 4 命令函数 | 待开发 |
-| 6 | `apps/web/src/components/NewProjectPanel.tsx` | ⬜ 阶段七 | 待开发 |
-| 7 | `apps/web/src/components/ProjectView.tsx` | ⬜ 阶段七 | 待开发 |
+| 4 | `apps/daemon/src/server.ts` | +10 行（initFoxpreDatabase + registerFoxpreRoutes） | ✅ 已完成（阶段六） |
+| 5 | `apps/daemon/src/cli.ts` | +243 行（3 命令函数 + SUBCOMMAND_MAP） | ✅ 已完成（阶段六） |
+| 6 | `apps/web/src/components/PluginLoopHome.tsx` | +1/-1 行（projectKind union 追加 'bid'） | ✅ 已完成（阶段六附带修复） |
+| 7 | `apps/web/src/components/NewProjectPanel.tsx` | ⬜ 阶段七 | 待开发 |
+| 8 | `apps/web/src/components/ProjectView.tsx` | ⬜ 阶段七 | 待开发 |
 
 ### 5.2 foxpre 自有文件（零冲突）
 
 | 目录 | 文件数 | 说明 |
 |------|--------|------|
 | `packages/contracts/src/foxpre/` | 3 | api.ts, constants.ts, index.ts |
-| `apps/daemon/src/foxpre/` | 4 | db.ts, document-pipeline.ts, harness-engine.ts, solo-coder.ts |
+| `apps/daemon/src/foxpre/` | 9 | db.ts, document-pipeline.ts, harness-engine.ts, solo-coder.ts + field-crypto.ts, bid-routes.ts, bidder-routes.ts, style-routes.ts, foxpre-routes.ts |
 | `apps/daemon/tests/foxpre/` | 4 | db, document-pipeline, harness-engine, solo-coder（共 53 用例） |
 | `skills/foxpre-*/` | 9 | 每个 agent 一个 SKILL.md |
-| `docs/foxpre/` | ~10 | AGENTS.md + 需求/架构/计划文档 + context/ |
+| `docs/foxpre/` | ~12 | AGENTS.md + 需求/架构/计划文档 + context/ |
 
-**总计 ~30 个文件**，全部在 foxpre 命名空间下。
+**总计 ~35 个文件**，全部在 foxpre 命名空间下。
 
 ---
 
@@ -313,11 +313,11 @@ git checkout -b foxpre/v0.10/phase-six foxpre/v0.10/dev
 
 | # | 事项 | 状态 |
 |---|------|------|
-| 1 | atomcode 阶段六开发（API 路由 + CLI） | ⬜ 提示词已就绪，等待 atomcode |
-| 2 | 阶段七 Web UI 提示词准备 | ⬜ 待准备 |
+| 1 | atomcode 阶段七开发（Web UI） | ⬜ 待准备提示词 |
+| 2 | 阶段七 Web UI 提示词准备 | ⬜ 待架构师编写 |
 | 3 | `scenario-defaults.test.ts` 补 `bid` 用例 | ⬜ 阶段零遗留 |
 | 4 | `HomeView.tsx:1541` 类型错误修复 | ⬜ 阶段七范围 |
-| 5 | 阶段六完成后主计划刷新 | ⬜ 待审查通过后 |
+| 5 | `PluginLoopHome.tsx` 已追加 'bid'（阶段六附带） | ✅ 已完成 |
 
 ---
 
