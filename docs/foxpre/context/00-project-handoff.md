@@ -73,10 +73,13 @@ foxpre（投标标书制作）是基于 Open Design 的**信息化类 IT 项目�
 | 文件 | 状态 |
 |------|------|
 | `apps/web/src/i18n/types.ts` | ✅ 已追加 38 行 foxpre.* Dict key |
-| `apps/web/src/i18n/locales/*.ts` (18 个文件) | ⬜ 待追加翻译 |
+| `apps/web/src/i18n/locales/*.ts` (18 个文件) | ✅ 已完成 38 个 key × 18 locale 翻译 |
 | `apps/web/src/components/NewProjectPanel.tsx` | ⬜ 待修改 |
 | `apps/web/src/components/ProjectView.tsx` | ⬜ 待修改 |
 | `apps/web/src/components/foxpre/` (12 个组件) | ⬜ 待创建 |
+
+**注意**：`foxpre.bidderManagement` key 有 typo（写作 `foxpro`，少 e），需修正。
+
 
 **产出**：
 | 操作 | 文件 | 说明 |
