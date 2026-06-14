@@ -447,6 +447,7 @@ import {
   upsertPreviewComment,
 } from './db.js';
 import { initFoxpreDatabase } from './foxpre/db.js';
+import { registerFoxpreRoutes } from './foxpre/foxpre-routes.js';
 import {
   computeIncludeStable,
   hashStableInstructions,
@@ -6222,6 +6223,13 @@ export async function startServer({
     projectFiles: projectFileDeps,
     conversations: conversationDeps,
     research: researchDeps,
+  });
+
+  registerFoxpreRoutes(app, {
+    db,
+    http: httpDeps,
+    paths: pathDeps,
+    ids: idDeps,
   });
 
   app.delete('/api/projects/:id', async (req, res) => {

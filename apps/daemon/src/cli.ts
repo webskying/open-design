@@ -263,6 +263,8 @@ const SUBCOMMAND_MAP = {
   project: runProject,
   automation: runAutomation,
   automations: runAutomation,
+  bid: runBid,
+  bidder: runBidder,
   memory: runMemory,
   run: runRun,
   files: runFiles,
@@ -272,6 +274,7 @@ const SUBCOMMAND_MAP = {
   daemon: runDaemon,
   atoms: runAtoms,
   skills: runSkills,
+  style: runStyle,
   'design-systems': runDesignSystems,
   craft: runCraft,
   diagnostics: runDiagnostics,
@@ -7953,6 +7956,246 @@ async function runAutomation(args) {
     default:
       console.error(`unknown subcommand: od automation ${sub}`);
       printAutomationHelp();
+      process.exit(2);
+  }
+}
+
+// ── foxpre CLI 命令函数 ────────────────────────────────────────
+
+async function runBid(args: string[]) {
+  if (args.length === 0 || args[0] === 'help' || args.includes('--help') || args.includes('-h')) {
+    console.log('Usage: od bid <action> [options]');
+    console.log('Actions:');
+    console.log('  create  创建投标项目');
+    console.log('  list    列出投标项目');
+    console.log('  status  查看项目工作流状态');
+    console.log('  start   启动工作流');
+    console.log('  harness 触发门禁审核');
+    console.log('  review  查看审核报告');
+    process.exit(args.length === 0 ? 2 : 0);
+  }
+
+  const sub = args[0];
+  const rest = args.slice(1);
+  const flags = parseFlags(rest, { boolean: new Set(['json']), string: new Set(['name', 'body-file']) });
+  const base = await cliDaemonBaseUrl(flags);
+  const writeJson = (data: unknown) => process.stdout.write(JSON.stringify(data, null, 2) + '\n');
+
+  switch (sub) {
+    case 'create': {
+      const name = flags.name ?? rest[0];
+      if (!name) { console.error('Usage: od bid create --name <name>'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/bid`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      });
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json();
+      writeJson(data);
+      return;
+    }
+    case 'list': {
+      const resp = await fetch(`${base}/api/foxpre/bid`);
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json() as { projects?: Array<{ id: string; name: string; 状态: string }> };
+      if (flags.json) return writeJson(data);
+      const projects = data.projects ?? [];
+      if (projects.length === 0) { console.log('No bid projects.'); return; }
+      console.log('id\tname\tstatus');
+      for (const p of projects) console.log(`${p.id}\t${p.name}\t${p.状态}`);
+      return;
+    }
+    case 'status': {
+      const id = rest[0];
+      if (!id) { console.error('Usage: od bid status <id>'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/bid/${encodeURIComponent(id)}/status`);
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json();
+      writeJson(data);
+      return;
+    }
+    case 'start': {
+      const id = rest[0];
+      if (!id) { console.error('Usage: od bid start <id>'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/bid/${encodeURIComponent(id)}/start`, { method: 'POST' });
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json();
+      writeJson(data);
+      return;
+    }
+    case 'harness': {
+      const id = rest[0];
+      if (!id) { console.error('Usage: od bid harness <id>'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/bid/${encodeURIComponent(id)}/harness`, { method: 'POST' });
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json();
+      writeJson(data);
+      return;
+    }
+    case 'review': {
+      const id = rest[0];
+      if (!id) { console.error('Usage: od bid review <id>'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/bid/${encodeURIComponent(id)}/review`);
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json();
+      writeJson(data);
+      return;
+    }
+    default:
+      console.error(`unknown subcommand: od bid ${sub}`);
+      process.exit(2);
+  }
+}
+
+async function runBidder(args: string[]) {
+  if (args.length === 0 || args[0] === 'help' || args.includes('--help') || args.includes('-h')) {
+    console.log('Usage: od bidder <action> [options]');
+    console.log('Actions:');
+    console.log('  add      创建投标人');
+    console.log('  list     列出投标人');
+    console.log('  get      查看投标人详情');
+    console.log('  delete   删除投标人');
+    process.exit(args.length === 0 ? 2 : 0);
+  }
+
+  const sub = args[0];
+  const rest = args.slice(1);
+  const flags = parseFlags(rest, { boolean: new Set(['json']), string: new Set(['name', 'body-file']) });
+  const base = await cliDaemonBaseUrl(flags);
+  const writeJson = (data: unknown) => process.stdout.write(JSON.stringify(data, null, 2) + '\n');
+
+  switch (sub) {
+    case 'add': {
+      const bodyFile = flags['body-file'];
+      let body: Record<string, unknown>;
+      if (bodyFile) {
+        body = JSON.parse(require('node:fs').readFileSync(bodyFile, 'utf-8'));
+      } else if (!process.stdin.isTTY) {
+        const stdin = await readStdinUtf8();
+        body = JSON.parse(stdin);
+      } else {
+        body = {};
+        const name = flags.name ?? rest[0];
+        if (name) body.name = name;
+      }
+      if (!body.name) { console.error('Usage: od bidder add --name <name> [--body-file <file>]'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/bidder`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json();
+      writeJson(data);
+      return;
+    }
+    case 'list': {
+      const resp = await fetch(`${base}/api/foxpre/bidder`);
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json() as { bidders?: Array<{ id: string; name: string }> };
+      if (flags.json) return writeJson(data);
+      const bidders = data.bidders ?? [];
+      if (bidders.length === 0) { console.log('No bidders.'); return; }
+      console.log('id\tname');
+      for (const b of bidders) console.log(`${b.id}\t${b.name}`);
+      return;
+    }
+    case 'get': {
+      const id = rest[0];
+      if (!id) { console.error('Usage: od bidder get <id>'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/bidder/${encodeURIComponent(id)}`);
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json();
+      writeJson(data);
+      return;
+    }
+    case 'delete': {
+      const id = rest[0];
+      if (!id) { console.error('Usage: od bidder delete <id>'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/bidder/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      if (!resp.ok) return structuredHttpFailure(resp);
+      writeJson({ ok: true });
+      return;
+    }
+    default:
+      console.error(`unknown subcommand: od bidder ${sub}`);
+      process.exit(2);
+  }
+}
+
+async function runStyle(args: string[]) {
+  if (args.length === 0 || args[0] === 'help' || args.includes('--help') || args.includes('-h')) {
+    console.log('Usage: od style <action> [options]');
+    console.log('Actions:');
+    console.log('  create   创建自定义模板');
+    console.log('  list     列出所有模板');
+    console.log('  get      查看模板详情');
+    console.log('  delete   删除模板');
+    process.exit(args.length === 0 ? 2 : 0);
+  }
+
+  const sub = args[0];
+  const rest = args.slice(1);
+  const flags = parseFlags(rest, { boolean: new Set(['json']), string: new Set(['name', 'body-file']) });
+  const base = await cliDaemonBaseUrl(flags);
+  const writeJson = (data: unknown) => process.stdout.write(JSON.stringify(data, null, 2) + '\n');
+
+  switch (sub) {
+    case 'create': {
+      const bodyFile = flags['body-file'];
+      let body: Record<string, unknown>;
+      if (bodyFile) {
+        body = JSON.parse(require('node:fs').readFileSync(bodyFile, 'utf-8'));
+      } else if (!process.stdin.isTTY) {
+        const stdin = await readStdinUtf8();
+        body = JSON.parse(stdin);
+      } else {
+        body = {};
+        const name = flags.name ?? rest[0];
+        if (name) body.name = name;
+      }
+      if (!body.name) { console.error('Usage: od style create --name <name> [--body-file <file>]'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/style`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json();
+      writeJson(data);
+      return;
+    }
+    case 'list': {
+      const resp = await fetch(`${base}/api/foxpre/style`);
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json() as { templates?: Array<{ id: string; name: string; isBuiltin: boolean }> };
+      if (flags.json) return writeJson(data);
+      const templates = data.templates ?? [];
+      if (templates.length === 0) { console.log('No templates.'); return; }
+      console.log('id\tname\tis_builtin');
+      for (const t of templates) console.log(`${t.id}\t${t.name}\t${t.isBuiltin}`);
+      return;
+    }
+    case 'get': {
+      const id = rest[0];
+      if (!id) { console.error('Usage: od style get <id>'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/style/${encodeURIComponent(id)}`);
+      if (!resp.ok) return structuredHttpFailure(resp);
+      const data = await resp.json();
+      writeJson(data);
+      return;
+    }
+    case 'delete': {
+      const id = rest[0];
+      if (!id) { console.error('Usage: od style delete <id>'); process.exit(2); }
+      const resp = await fetch(`${base}/api/foxpre/style/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      if (!resp.ok) return structuredHttpFailure(resp);
+      writeJson({ ok: true });
+      return;
+    }
+    default:
+      console.error(`unknown subcommand: od style ${sub}`);
       process.exit(2);
   }
 }
