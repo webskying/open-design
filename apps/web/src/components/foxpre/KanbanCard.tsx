@@ -1,4 +1,5 @@
 import React from 'react';
+import { useT } from '../../i18n';
 
 interface AgentTask {
   id: string;
@@ -55,6 +56,7 @@ function formatTime(ts: number | string | undefined): string {
 }
 
 export function KanbanCard({ task, onSelect }: KanbanCardProps) {
+  const t = useT();
   const statusColor = STATUS_COLORS[task.status] ?? 'bg-gray-200';
   const label = AGENT_LABELS[task.agentCode] ?? AGENT_LABELS_EN[task.agentCode] ?? task.agentCode;
 
@@ -66,14 +68,14 @@ export function KanbanCard({ task, onSelect }: KanbanCardProps) {
       </div>
       <div className="text-sm font-medium mb-1">{label}</div>
       <div className="text-xs text-gray-500 mb-2">
-        状态: {task.status}
+        {t('foxpre.projectSettings')}: {task.status}
         {task.updatedAt && ` · ${formatTime(task.updatedAt)}`}
       </div>
       <button
         className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition-colors"
         onClick={() => onSelect(task.agentCode)}
       >
-        对话
+        {t('foxpre.agentChat')}
       </button>
     </div>
   );

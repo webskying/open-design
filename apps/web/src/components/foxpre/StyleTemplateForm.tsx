@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useT } from '../../i18n';
 
 interface StyleTemplateFormProps {
   templateId?: string | null;
@@ -7,6 +8,7 @@ interface StyleTemplateFormProps {
 }
 
 export function StyleTemplateForm({ templateId, onSaved, onCancel }: StyleTemplateFormProps) {
+  const t = useT();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [templatePath, setTemplatePath] = useState('');
@@ -21,7 +23,7 @@ export function StyleTemplateForm({ templateId, onSaved, onCancel }: StyleTempla
       setFormatError(null);
       return true;
     } catch {
-      setFormatError('JSON 格式无效');
+      setFormatError(t('foxpre.jsonInvalid'));
       return false;
     }
   };
@@ -50,7 +52,7 @@ export function StyleTemplateForm({ templateId, onSaved, onCancel }: StyleTempla
       });
       if (!resp.ok) {
         const errData = await resp.json() as { message?: string };
-        throw new Error(errData.message ?? '操作失败');
+        throw new Error(errData.message ?? t('foxpre.operationFailed'));
       }
       onSaved();
     } catch (err) {
@@ -63,7 +65,7 @@ export function StyleTemplateForm({ templateId, onSaved, onCancel }: StyleTempla
   return (
     <div className="space-y-3 p-4 max-w-sm">
       <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">模板名称 *</label>
+        <label className="block text-xs font-medium text-gray-700 mb-1">{t('foxpre.templateName')} *</label>
         <input
           className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
           value={name}

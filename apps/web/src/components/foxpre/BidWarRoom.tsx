@@ -3,6 +3,7 @@ import { KanbanBoard } from './KanbanBoard';
 import { DocumentPreview } from './DocumentPreview';
 import { AgentChatDrawer } from './AgentChatDrawer';
 import { BidSettingsPanel } from './BidSettingsPanel';
+import { useT } from '../../i18n';
 
 interface WorkflowTask {
   id: string;
@@ -49,6 +50,7 @@ interface BidWarRoomProps {
 }
 
 export function BidWarRoom({ projectId, metadata }: BidWarRoomProps) {
+  const t = useT();
   const [kanbanState, setKanbanState] = useState<WorkflowState | null>(null);
   const [activeAgent, setActiveAgent] = useState<string | null>(null);
   const [selectedFragment, setSelectedFragment] = useState<string | null>(null);
@@ -115,7 +117,7 @@ export function BidWarRoom({ projectId, metadata }: BidWarRoomProps) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="text-gray-400">加载投标工作区...</div>
+        <div className="text-gray-400">{t('foxpre.loading')}</div>
       </div>
     );
   }
@@ -138,8 +140,7 @@ export function BidWarRoom({ projectId, metadata }: BidWarRoomProps) {
             {project?.name ?? projectId}
           </span>
           {kanbanState && (
-            <span className="text-xs text-gray-500">
-              轮次: {kanbanState.reviewRound}
+            <span className="text-xs text-gray-500">{t('foxpre.kanban')}: {kanbanState.reviewRound}
             </span>
           )}
         </div>
@@ -148,21 +149,21 @@ export function BidWarRoom({ projectId, metadata }: BidWarRoomProps) {
             className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 disabled:opacity-50"
             onClick={() => setShowSettings(true)}
           >
-            设置
+            {t('foxpre.projectSettings')}
           </button>
           <button
             className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
             onClick={handleStartWorkflow}
             disabled={actionLoading === 'start'}
           >
-            {actionLoading === 'start' ? '启动中...' : '启动工作流'}
+            {actionLoading === 'start' ? t('foxpre.startWorkflow') + '...' : t('foxpre.startWorkflow')}
           </button>
           <button
             className="px-3 py-1.5 text-sm bg-orange-500 text-white rounded hover:bg-orange-600 disabled:opacity-50"
             onClick={handleTriggerHarness}
             disabled={actionLoading === 'harness'}
           >
-            {actionLoading === 'harness' ? '审核中...' : '触发门禁'}
+            {actionLoading === 'harness' ? t('foxpre.triggerHarness') + '...' : t('foxpre.triggerHarness')}
           </button>
         </div>
       </div>
@@ -172,7 +173,7 @@ export function BidWarRoom({ projectId, metadata }: BidWarRoomProps) {
         {/* Left: Kanban */}
         <div className="w-80 flex-shrink-0 border-r overflow-y-auto bg-gray-50">
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 pt-3 pb-1">
-            看板
+            {t('foxpre.kanban')}
           </h3>
           <KanbanBoard
             tasks={kanbanState?.tasks ?? []}
@@ -185,6 +186,7 @@ export function BidWarRoom({ projectId, metadata }: BidWarRoomProps) {
           <DocumentPreview
             projectId={projectId}
             selectedAgent={activeAgent}
+            tasks={kanbanState?.tasks ?? []}
           />
         </div>
 

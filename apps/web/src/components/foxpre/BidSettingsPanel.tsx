@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BidderList } from './BidderList';
 import { BidderForm } from './BidderForm';
 import { StyleTemplateList } from './StyleTemplateList';
+import { useT } from '../../i18n';
 
 interface BidSettingsPanelProps {
   projectId: string;
@@ -9,6 +10,7 @@ interface BidSettingsPanelProps {
 }
 
 export function BidSettingsPanel({ projectId, onClose }: BidSettingsPanelProps) {
+  const t = useT();
   const [showBidderForm, setShowBidderForm] = useState(false);
 
   return (
@@ -18,7 +20,7 @@ export function BidSettingsPanel({ projectId, onClose }: BidSettingsPanelProps) 
       {/* Panel */}
       <div className="fixed right-0 top-0 h-full w-[480px] bg-white shadow-xl z-50 flex flex-col overflow-y-auto">
         <div className="flex items-center justify-between px-4 py-3 border-b">
-          <h2 className="font-medium">项目设置</h2>
+          <h2 className="font-medium">{t('foxpre.projectSettings')}</h2>
           <button
             className="text-gray-400 hover:text-gray-600 text-xl leading-none"
             onClick={onClose}
@@ -31,7 +33,7 @@ export function BidSettingsPanel({ projectId, onClose }: BidSettingsPanelProps) 
           {/* Section 1: 投标人管理 */}
           <div className="border-b">
             <div className="px-4 py-3 bg-gray-50">
-              <h3 className="font-medium text-sm">投标人管理</h3>
+              <h3 className="font-medium text-sm">{t('foxpre.bidderManagement')}</h3>
             </div>
             {showBidderForm ? (
               <BidderForm
@@ -49,7 +51,7 @@ export function BidSettingsPanel({ projectId, onClose }: BidSettingsPanelProps) 
           {/* Section 2: 样式模板 */}
           <div>
             <div className="px-4 py-3 bg-gray-50">
-              <h3 className="font-medium text-sm">样式模板</h3>
+              <h3 className="font-medium text-sm">{t('foxpre.styleTemplate')}</h3>
             </div>
             <StyleTemplateList
               onSelect={async (templateId) => {

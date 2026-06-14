@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useT } from '../../i18n';
 
 interface BidderListProps {
   onSelect: (bidderId: string) => void;
@@ -13,6 +14,7 @@ interface BidderItem {
 }
 
 export function BidderList({ onSelect, onAdd }: BidderListProps) {
+  const t = useT();
   const [bidders, setBidders] = useState<BidderItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,17 +38,17 @@ export function BidderList({ onSelect, onAdd }: BidderListProps) {
     } catch {}
   };
 
-  if (loading) return <div className="text-sm text-gray-400 p-4">加载中...</div>;
+  if (loading) return <div className="text-sm text-gray-400 p-4">{t('foxpre.loading')}</div>;
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-3">
-        <h4 className="font-medium text-sm">投标人列表</h4>
+        <h4 className="font-medium text-sm">{t('foxpre.bidderList')}</h4>
         <button
           className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
           onClick={onAdd}
         >
-          新增
+          {t('foxpre.add')}
         </button>
       </div>
       {bidders.length === 0 ? (

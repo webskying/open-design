@@ -1,4 +1,6 @@
 import React from 'react';
+import { useT } from '../../i18n';
+import type { Dict } from '../../i18n/types';
 import { KanbanCard } from './KanbanCard';
 
 interface AgentTask {
@@ -15,26 +17,36 @@ interface KanbanBoardProps {
   onSelectAgent: (agentCode: string) => void;
 }
 
-const COLUMNS = ['待启动', '进行中', '等待审核', '需修改', '已完成'] as const;
+const COLUMN_KEYS: (keyof Dict)[] = [
+  'foxpre.todo',
+  'foxpre.inProgress',
+  'foxpre.review',
+  'foxpre.needsRevision',
+  'foxpre.done',
+];
 
 function mapStatusToKanbanColumn(taskStatus: string): string {
   switch (taskStatus) {
-    case '排队中': return '待启动';
-    case '执行中': return '进行中';
-    case '已完成': return '等待审核';
-    case '失败': return '需修改';
-    case '已取消': return '已完成';
-    default: return '待启动';
+    case '排队中': return 'foxpre.todo';
+    case '执行中': return 'foxpre.inProgress';
+    case '已完成': return 'foxpre.review';
+    case '失败': return 'foxpre.needsRevision';
+    case '已取消': return 'foxpre.done';
+    default: return 'foxpre.todo';
   }
 }
 
 export function KanbanBoard({ tasks, onSelectAgent }: KanbanBoardProps) {
+  const t = useT();
+  const columns = COLUMN_KEYS.map(k => t(k));
+
   return (
     <div className="flex gap-4 overflow-x-auto p-4 h-full">
-      {COLUMNS.map((col) => {
-        const cards = tasks.filter((t) => mapStatusToKanbanColumn(t.status) === col);
+      {columns.map((col, index) => {
+        const key = COLUMN_KEYS[index];
+        const cards = tasks.filter((t) => mapStatusToKanbanColumn(t.status) === key);
         return (
-          <div key={col} className="flex flex-col gap-2 min-w-[200px] w-[200px]">
+          <div key={key} className="flex flex-col gap-2 min-w-[200px] w-[200px]">
             <h3 className="text-sm font-semibold px-2 py-1 bg-gray-100 rounded">
               {col} ({cards.length})
             </h3>
@@ -43,7 +55,7 @@ export function KanbanBoard({ tasks, onSelectAgent }: KanbanBoardProps) {
             ))}
             {cards.length === 0 && (
               <div className="text-xs text-gray-400 px-2 py-4 text-center border-dashed border border-gray-200 rounded">
-                无任务
+                {t('foxpre.noTasks')}
               </div>
             )}
           </div>

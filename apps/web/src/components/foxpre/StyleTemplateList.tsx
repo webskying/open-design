@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useT } from '../../i18n';
 
 interface StyleTemplateListProps {
   onSelect: (templateId: string) => void;
@@ -12,6 +13,7 @@ interface TemplateItem {
 }
 
 export function StyleTemplateList({ onSelect }: StyleTemplateListProps) {
+  const t = useT();
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,30 +27,30 @@ export function StyleTemplateList({ onSelect }: StyleTemplateListProps) {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="text-sm text-gray-400 p-4">加载中...</div>;
+  if (loading) return <div className="text-sm text-gray-400 p-4">{t('foxpre.loading')}</div>;
 
   return (
     <div className="p-4">
-      <h4 className="font-medium text-sm mb-3">样式模板</h4>
+      <h4 className="font-medium text-sm mb-3">{t('foxpre.styleTemplate')}</h4>
       {templates.length === 0 ? (
-        <div className="text-sm text-gray-400">暂无模板</div>
+        <div className="text-sm text-gray-400">{t('foxpre.noTemplates')}</div>
       ) : (
         <div className="space-y-2">
-          {templates.map((t) => (
+          {templates.map((item) => (
             <div
-              key={t.id}
+              key={item.id}
               className="flex items-center justify-between p-2 border rounded hover:bg-gray-50 cursor-pointer"
-              onClick={() => onSelect(t.id)}
+              onClick={() => onSelect(item.id)}
             >
               <div>
                 <span className="text-sm font-medium">
-                  {t.isBuiltin ? '🔒 ' : ''}{t.name}
+                  {item.isBuiltin ? '🔒 ' : ''}{item.name}
                 </span>
-                {t.description && (
-                  <span className="text-xs text-gray-500 ml-2">{t.description}</span>
+                {item.description && (
+                  <span className="text-xs text-gray-500 ml-2">{item.description}</span>
                 )}
               </div>
-              {t.isBuiltin && <span className="text-xs text-gray-400">内置</span>}
+              {item.isBuiltin && <span className="text-xs text-gray-400">{t('foxpre.builtin')}</span>}
             </div>
           ))}
         </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useT } from '../../i18n';
 
 interface BidderFormProps {
   bidderId?: string;
@@ -7,6 +8,7 @@ interface BidderFormProps {
 }
 
 export function BidderForm({ bidderId, onSaved, onCancel }: BidderFormProps) {
+  const t = useT();
   const [name, setName] = useState('');
   const [creditCode, setCreditCode] = useState('');
   const [legalRep, setLegalRep] = useState('');
@@ -38,7 +40,7 @@ export function BidderForm({ bidderId, onSaved, onCancel }: BidderFormProps) {
       });
       if (!resp.ok) {
         const errData = await resp.json() as { message?: string };
-        throw new Error(errData.message ?? '操作失败');
+        throw new Error(errData.message ?? t('foxpre.operationFailed'));
       }
       onSaved();
     } catch (err) {
@@ -51,7 +53,7 @@ export function BidderForm({ bidderId, onSaved, onCancel }: BidderFormProps) {
   return (
     <div className="space-y-3 p-4 max-w-sm">
       <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">公司名称 *</label>
+        <label className="block text-xs font-medium text-gray-700 mb-1">{t('foxpre.bidderName')} *</label>
         <input
           className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
           value={name}
@@ -59,7 +61,7 @@ export function BidderForm({ bidderId, onSaved, onCancel }: BidderFormProps) {
         />
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">统一社会信用代码</label>
+        <label className="block text-xs font-medium text-gray-700 mb-1">{t('foxpre.creditCode')}</label>
         <input
           className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
           value={creditCode}
