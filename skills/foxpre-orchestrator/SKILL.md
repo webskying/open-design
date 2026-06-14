@@ -1,6 +1,12 @@
 ---
 name: foxpre-orchestrator
-description: 编排调度器  任务依赖管理、状态流转、看板更新
+zh_name: "编排调度器"
+emoji: "🎯"
+description: "任务依赖管理、状态流转、看板更新"
+category: bid
+od:
+  mode: bid
+  category: bid
 ---
 
 # 编排调度器（Orchestrator）
@@ -50,3 +56,14 @@ draft → analyzing → [tech-writing, biz-writing, qual-writing] (并行)
 - 门禁阶段不通过（HarnessRunner 返回 failedRules > 0）则标记为 `failed`，退回编写阶段
 - 状态变更须写入 `foxpre_projects` 表
 - 支持重新执行单个阶段（如仅重写技术方案）
+
+## 技术上下文
+- 状态机字段：`foxpre_projects.状态`（`待启动` → `进行中` → `等待审核` → `需修改` → `已完成`）
+- 任务管理：`foxpre_agent_tasks` 表追踪每个 Agent 执行状态
+- Agent 派遣：通过 `POST /api/runs` 创建 Agent 实例（当前阶段尚未实现，仅注释说明）
+- 依赖图执行：严格按 DAG 执行，不可跳过 HarnessRunner 门禁
+- 门禁门逻辑：`failedRules > 0` → 状态转为 `需修改`，退回编写阶段；`failedRules === 0` → 状态转为 `等待审核`
+
+## 交互协议
+- 与 BidderManager 交互：创建项目时读取投标人数据快照
+- 故障恢复：`foxpre_agent_tasks.status` 的 `FAILED` 状态可触发重试

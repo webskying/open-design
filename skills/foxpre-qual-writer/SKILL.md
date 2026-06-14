@@ -1,6 +1,12 @@
 ---
 name: foxpre-qual-writer
-description: 资质文件编写器  资质证书清单、人员配置表
+zh_name: "资质文件编写器"
+emoji: "📋"
+description: "资质证书清单、人员配置表"
+category: bid
+od:
+  mode: bid
+  category: bid
 ---
 
 # 资质文件编写器（QualWriter）
@@ -26,3 +32,13 @@ description: 资质文件编写器  资质证书清单、人员配置表
 - 人员信息须与实际情况一致
 - 业绩案例须提供合同/验收证明参考
 - 不得伪造资格信息
+
+## 技术上下文
+- 输入来源：Analyzer 输出的资质条件、`foxpre_bidders` + `foxpre_bidder_qualifications` + `foxpre_bidder_projects`
+- 数据库操作：从三张 bidder 相关表读取资质、业绩数据
+- 必含要素：资质证书清单、人员配置表、类似业绩案例表、资格证明文件索引
+- 资质过期检测：对比 `有效截止日期` 字段与当前日期
+
+## 交互协议
+- 上游：Analyzer + BidderManager
+- 并行约束：与 TechWriter、BizWriter 并行

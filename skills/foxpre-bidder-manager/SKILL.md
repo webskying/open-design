@@ -1,6 +1,12 @@
 ---
 name: foxpre-bidder-manager
-description: 投标人管理器  投标人信息、资质证书、业绩案例
+zh_name: "投标人管理器"
+emoji: "🏢"
+description: "投标人信息、资质证书、业绩案例"
+category: bid
+od:
+  mode: bid
+  category: bid
 ---
 
 # 投标人管理器（BidderManager）
@@ -24,3 +30,13 @@ description: 投标人管理器  投标人信息、资质证书、业绩案例
 - 投标人档案变更须保留历史记录
 - 资质证书有效期须精确到日，过期自动标记
 - 不得共享不同投标人的信息
+
+## 技术上下文
+- 管理表：`foxpre_bidders`（投标人信息）、`foxpre_bidder_qualifications`（资质证书）、`foxpre_bidder_projects`（业绩案例）
+- 敏感字段加密：`统一社会信用代码`、`法人代表` 通过 `AES-256-GCM` 加密存储（阶段六实现 `field-crypto.ts`）
+- 资质过期预警：`SELECT * FROM foxpre_bidder_qualifications WHERE 有效截止日期 < ?` 查询即将过期证书
+- 快照模式：创建项目时一次性快照到 `foxpre_projects`，标书生成使用本地快照
+
+## 交互协议
+- 消费者：QualWriter（读取资质和业绩）、BizWriter（读取报价信息）
+- 不参与主工作流 DAG——是支撑服务，按需被查询
