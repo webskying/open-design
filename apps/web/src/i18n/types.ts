@@ -3180,4 +3180,42 @@ export interface Dict {
   'diagnostics.exporting': string;
   'diagnostics.exportSuccess': string;
   'diagnostics.exportFailed': string;
+
+  // foxpre
+  'foxpre.newBidProject': string;
+  'foxpre.bidWarRoom': string;
+  'foxpre.kanban': string;
+  'foxpre.documentPreview': string;
+  'foxpre.agentChat': string;
+  'foxpre.createBid': string;
+  'foxpre.startWorkflow': string;
+  'foxpre.triggerHarness': string;
+  'foxpre.projectSettings': string;
+  'foxpro.bidderManagement': string;
+  'foxpre.styleTemplate': string;
+  'foxpre.todo': string;
+  'foxpre.inProgress': string;
+  'foxpre.review': string;
+  'foxpre.needsRevision': string;
+  'foxpre.done': string;
+  'foxpre.noAgentSelected': string;
+  'foxpre.generating': string;
+  'foxpre.builtin': string;
+  'foxpre.custom': string;
+  'foxpre.bidderName': string;
+  'foxpre.contactPerson': string;
+  'foxpre.phone': string;
+  'foxpre.creditCode': string;
+  'foxpre.legalRep': string;
+  'foxpre.templateName': string;
+  'foxpre.templatePath': string;
+  'foxpre.formatSpec': string;
+  'foxpre.bidNumber': string;
+  'foxpre.description': string;
+  'foxpre.selectBidder': string;
+  'foxpre.selectTemplate': string;
+  'foxpre.save': string;
+  'foxpre.cancel': string;
+  'foxpre.delete': string;
+  'foxpre.edit': string;
 }
