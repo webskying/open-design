@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useT } from '../../i18n';
 
 interface CreateBidFormProps {
   projectName: string;
@@ -16,6 +17,7 @@ interface StyleOption {
 }
 
 export function CreateBidForm({ projectName, onCreated }: CreateBidFormProps) {
+  const t = useT();
   const [name, setName] = useState(projectName);
   const [description, setDescription] = useState('');
   const [bidNumber, setBidNumber] = useState('');
@@ -69,7 +71,7 @@ export function CreateBidForm({ projectName, onCreated }: CreateBidFormProps) {
   return (
     <div className="space-y-4 p-4 max-w-md">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">项目名称</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('foxpre.projectName')}</label>
         <input
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-400"
           value={name}
@@ -77,7 +79,7 @@ export function CreateBidForm({ projectName, onCreated }: CreateBidFormProps) {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">项目描述</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('foxpre.description')}</label>
         <textarea
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-400"
           rows={3}
@@ -86,7 +88,7 @@ export function CreateBidForm({ projectName, onCreated }: CreateBidFormProps) {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">招标编号</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('foxpre.bidNumber')}</label>
         <input
           className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-400"
           value={bidNumber}
