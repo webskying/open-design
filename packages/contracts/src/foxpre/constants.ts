@@ -1,14 +1,14 @@
-/** foxpre 智能体代号 */
+/** foxpre 智能体代号（按 DAG 执行顺序） */
 export const AGENT_CODES = {
   ANALYZER: 'Analyzer',
-  RESEARCHER: 'Researcher',
-  PROTOTYPER: 'Prototyper',
-  ARCHITECT: 'Architect',
   TECH_WRITER: 'TechWriter',
-  BUSINESS_WRITER: 'BusinessWriter',
-  PM_WRITER: 'PMWriter',
-  REVIEWER: 'Reviewer',
-  SOLO_CODER: 'SoloCoder',
+  BIZ_WRITER: 'BizWriter',
+  QUAL_WRITER: 'QualWriter',
+  HARNESS_RUNNER: 'HarnessRunner',
+  STYLE_CHECKER: 'StyleChecker',
+  DOCX_ASSEMBLER: 'DocxAssembler',
+  ORCHESTRATOR: 'Orchestrator',
+  BIDDER_MANAGER: 'BidderManager',
 } as const;
 
 export type AgentCode = (typeof AGENT_CODES)[keyof typeof AGENT_CODES];
