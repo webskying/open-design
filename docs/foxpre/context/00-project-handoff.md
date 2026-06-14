@@ -66,15 +66,24 @@ foxpre（投标标书制作）是基于 Open Design 的**信息化类 IT 项目�
 
 ### 3.2 下一阶段：阶段七（Web UI）
 
-**提示词文档**：`docs/foxpre/plan/0614_phase-seven-web-ui.md`（待编写）
+**提示词文档**：`docs/foxpre/plan/0614_phase-seven-web-ui.md`（700 行，✅ 已就绪）
 
 **产出**：
 | 操作 | 文件 | 说明 |
 |------|------|------|
-| 新增 | `apps/web/src/components/foxpre/` | 18 个 UI 组件 |
-| 新增 | `apps/web/src/app/foxpre/` | 4 个页面路由 |
-| 修改 | `apps/web/src/components/NewProjectPanel.tsx` | +15~20 行（projectKind 追加 'bid'） |
-| 修改 | `apps/web/src/components/ProjectView.tsx` | +10~15 行（bid 项目视图） |
+| 新增 | `apps/web/src/components/foxpre/BidWarRoom.tsx` | 三栏核心工作区（看板 + 预览 + 对话） |
+| 新增 | `apps/web/src/components/foxpre/KanbanBoard.tsx` | 5 列看板 + 任务分组 |
+| 新增 | `apps/web/src/components/foxpre/KanbanCard.tsx` | 单张看板卡片 |
+| 新增 | `apps/web/src/components/foxpre/DocumentPreview.tsx` | 文档预览区 |
+| 新增 | `apps/web/src/components/foxpre/AgentChatDrawer.tsx` | Agent 侧边对话面板 |
+| 新增 | `apps/web/src/components/foxpre/CreateBidForm.tsx` | 投标项目创建表单 |
+| 新增 | `apps/web/src/components/foxpre/BidderList.tsx` + `BidderForm.tsx` | 投标人管理 |
+| 新增 | `apps/web/src/components/foxpre/StyleTemplateList.tsx` + `StyleTemplateForm.tsx` | 样式模板管理 |
+| 新增 | `apps/web/src/components/foxpre/BidSettingsPanel.tsx` | 项目设置面板 |
+| 新增 | `apps/web/src/components/foxpre/index.ts` | barrel export |
+| 修改 | `apps/web/src/components/NewProjectPanel.tsx` | CreateTab 追加 'bid' + buildMetadata 分支 |
+| 修改 | `apps/web/src/components/ProjectView.tsx` | kind='bid' 时显示"标书" Tab + BidWarRoom |
+| 修改 | `apps/web/src/i18n/types.ts` + `locales/*.ts` (19 个文件) | Dict 追加 ~40 foxpre.* 键 |
 
 **分支**：atomcode 需从 `foxpre/v0.10/dev` 切出 `foxpre/v0.10/phase-seven` 进行开发。
 
@@ -93,8 +102,9 @@ upstream  https://github.com/nexu-io/open-design.git    (官方仓库)
 
 ```
 foxpre/v0.10/dev  ← 当前开发分支
-  ├── a8f6a2914 foxpre: merge phase-six API routes + CLI ← 当前 HEAD
-  ├── 09dd31192 foxpre: add daemon API routes + CLI commands
+  ├── 29bfd8dd4 foxpre: add phase-seven Web UI development plan ← 当前 HEAD
+  ├── 3d1814010 foxpre: refresh master plan and handoff after phase-six merge
+  ├── a8f6a2914 foxpre: merge phase-six API routes + CLI
   ├── 4b2e7a0  foxpre: add phase-six API routes development plan
   ├── dceed21  foxpre: refresh master plan
   ├── d221511  foxpre: add SOLO Coder scheduling engine
@@ -313,8 +323,7 @@ git checkout -b foxpre/v0.10/phase-six foxpre/v0.10/dev
 
 | # | 事项 | 状态 |
 |---|------|------|
-| 1 | atomcode 阶段七开发（Web UI） | ⬜ 待准备提示词 |
-| 2 | 阶段七 Web UI 提示词准备 | ⬜ 待架构师编写 |
+| 1 | atomcode 阶段七开发（Web UI） | ⬜ 提示词已就绪，等待 atomcode |
 | 3 | `scenario-defaults.test.ts` 补 `bid` 用例 | ⬜ 阶段零遗留 |
 | 4 | `HomeView.tsx:1541` 类型错误修复 | ⬜ 阶段七范围 |
 | 5 | `PluginLoopHome.tsx` 已追加 'bid'（阶段六附带） | ✅ 已完成 |
