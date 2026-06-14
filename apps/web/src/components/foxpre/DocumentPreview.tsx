@@ -111,7 +111,7 @@ export function DocumentPreview({ projectId, selectedAgent, tasks }: DocumentPre
             {project.description && (
               <p className="text-sm text-gray-600 mb-2">{project.description}</p>
             )}
-            <p className="text-sm text-gray-500 mb-2">{t('foxpre.projectSettings')}: {project['状态'] ?? t('foxpre.noAgentFound')}</p>
+            <p className="text-sm text-gray-500 mb-2">{t('foxpre.status')}: {project['状态'] ?? t('foxpre.noAgentFound')}</p>
             {project.fragmentCount !== undefined && (
               <p className="text-sm text-gray-500">{t('foxpre.documentPreview')}: {project.fragmentCount}</p>
             )}
