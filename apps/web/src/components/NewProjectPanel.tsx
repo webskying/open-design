@@ -790,7 +790,6 @@ export function NewProjectPanel({
         </button>
         <div className="newproj-tabs" role="tablist" ref={tabsRef}>
           {(Object.keys(TAB_LABEL_KEYS) as CreateTab[])
-            .filter((k) => k !== 'bid')
             .map((entry) => (
             <button
               key={entry}
@@ -2899,6 +2898,9 @@ function buildMetadata(input: {
         : {}),
       ...inspirations,
     };
+  }
+  if (input.tab === 'bid') {
+    return { kind: 'bid', ...inspirations };
   }
   return { kind: 'other', ...base, ...inspirations };
 }
